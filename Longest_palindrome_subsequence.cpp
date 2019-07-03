@@ -3,6 +3,10 @@
   L[0,n-1] => L[ 1, n-2 ] + 2 if arr[0] == arr[n-1]
               else
 	      max{ L[1, n-1], L[ 0, n-2] }
+
+ 
+  Time complexity: O ( n^2 )
+  Auxiliary Space: O ( n^2 )
  */
 
 #include <iostream>
