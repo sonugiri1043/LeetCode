@@ -45,6 +45,26 @@ void reverse( Node *head, int groupSize ) {
   }
 }
 
+Node *reverseV2( Node *node, int k ) {
+  Node *curr = node;
+  Node *next = nullptr;
+  Node *prev = nullptr;
+
+  int count = 0;
+  while( curr != nullptr || count < k ) {
+    next = curr->next;
+    curr->next = prev;
+    prev = curr;
+    curr = next;
+    count++;
+  }
+
+  if( next != NULL  ) {
+    node->next = reverseV2( next, k )
+  }
+  return prev;
+}
+
 Node *getTail( Node *node, int n ) {
   while( node->next != nullptr && n > 1 ) {
     node = node->next;
