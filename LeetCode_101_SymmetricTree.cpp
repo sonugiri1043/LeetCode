@@ -51,3 +51,39 @@ public:
     return isSymmetricUtil( root->left, root->right );
   }
 };
+
+class Solution {
+public:
+  bool isSymmetric(TreeNode* root) {
+    if( !root ) {
+      return true;
+    }
+        
+    queue<TreeNode*> left;
+    left.push( root->left );
+    queue<TreeNode*> right;
+    right.push( root->right );
+    TreeNode *leftCurr;
+    TreeNode *rightCurr;
+    while( ! left.empty() && ! right.empty() ) {
+      leftCurr = left.front();
+      left.pop();
+      rightCurr = right.front();
+      right.pop();
+      if( leftCurr == NULL && rightCurr == NULL ) {
+	continue;
+      }
+      if( leftCurr == NULL || rightCurr == NULL ) {
+	return false;
+      }
+      if( leftCurr->val != rightCurr->val ) {
+	return false;
+      }
+      left.push( leftCurr->left );
+      left.push( leftCurr->right );
+      right.push( rightCurr->right );
+      right.push( rightCurr->left );
+    }
+    return true;
+  }
+};
