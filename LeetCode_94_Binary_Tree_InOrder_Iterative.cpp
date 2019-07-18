@@ -42,7 +42,8 @@ public:
 };
 
 
-// another approach
+// Another approach
+// Generic approach, can be used for post-order with little modification.
 class Solution {
 public:
   void initVisited( TreeNode *node,unordered_map< TreeNode*, int > &visited ) {
