@@ -46,3 +46,27 @@ public:
     return inorder[k-1];
   }
 };
+
+
+// Approach 2: Iterative inorder
+class Solution {
+public:
+  int kthSmallest( TreeNode* root, int k ) {
+    TreeNode *curr = root;
+    stack<TreeNode*> s;
+    while( 1 ) {           
+      while( curr ) {
+	s.push( curr );
+	curr = curr->left;
+      }           
+      if( s.empty() ) break;
+            
+      curr = s.top();
+      s.pop();
+      k--;
+      if( k == 0 ) return curr->val;            
+      curr = curr->right;
+    }
+    return -1;
+  }
+};
