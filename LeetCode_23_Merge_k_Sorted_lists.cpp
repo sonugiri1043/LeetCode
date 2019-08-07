@@ -52,3 +52,20 @@ public:
     return head->next;
   }
 };
+
+// O( nlogn )
+class Solution {
+public:
+  int lengthOfLIS( vector<int> &nums ) {
+    set<int> lis;
+    for ( auto num : nums ) {
+      if( lis.count( num ) ) continue;
+            
+      lis.insert( num );
+      auto it = lis.upper_bound( num );
+      if( it != lis.end() )
+	lis.erase( it );
+    }
+    return lis.size();
+  }
+};
