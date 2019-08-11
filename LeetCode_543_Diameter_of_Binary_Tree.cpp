@@ -20,7 +20,6 @@
 */
 
 /*
-  You can use memoisation to reduce the time complexity.
   The diameter need not pass through the root, that's why we check all the
   nodes in diameterOfBinaryTree function and return the one with max.
  */
@@ -38,5 +37,37 @@ public:
     int d = getMaxDepth( node->left ) + getMaxDepth( node->right );
     return max( max( d, diameterOfBinaryTree( node->left ) ),
 		max( d, diameterOfBinaryTree( node->right ) ) );
+  }
+};
+
+
+class Solution {
+  int getMaxDepth( TreeNode *node, unordered_map<TreeNode*, int> &depth ) {
+    if( !node ) return 0;
+    if( depth.find( node->left ) == depth.end() )
+      depth[ node->left ] = getMaxDepth( node->left, depth );
+        
+    if( depth.find( node->right ) == depth.end() )
+      depth[ node->right ] = getMaxDepth( node->right, depth );
+    return 1 + max( depth[ node->left ], depth[ node->right ] ); 
+  }
+    
+  int diameterHelper( TreeNode *node, unordered_map<TreeNode*, int> &depth ) {
+    if( !node ) return 0;
+    if( depth.find( node->left ) == depth.end() )
+      depth[ node->left ] = getMaxDepth( node->left, depth );
+
+    if( depth.find( node->right ) == depth.end() )
+      depth[ node->right ] = getMaxDepth( node->right, depth );
+        
+    int d = depth[ node->left ] + depth[ node->right ];
+    return max( max( d, diameterHelper( node->left, depth ) ),
+		max( d, diameterHelper( node->right, depth ) ) );       
+  }
+    
+public:
+  int diameterOfBinaryTree( TreeNode* node ) {
+    unordered_map< TreeNode*, int > depth;
+    return diameterHelper( node, depth );
   }
 };
