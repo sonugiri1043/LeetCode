@@ -18,3 +18,23 @@ public:
     return result;
   }
 };
+
+// Iterative
+class Solution {    
+public:
+  vector<int> preorder( Node* root ) {
+    vector<int> result;
+    if( !root ) return result;
+        
+    stack<Node*> s;
+    s.push( root );
+    Node *curr;
+    while( !s.empty() ) {
+      curr = s.top(); s.pop();
+      result.push_back( curr->val );            
+      for( auto it=curr->children.rbegin(); it!=curr->children.rend(); ++it )
+	s.push( *it );
+    }
+    return result;
+  }
+}
