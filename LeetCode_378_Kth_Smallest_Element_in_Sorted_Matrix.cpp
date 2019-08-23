@@ -57,3 +57,29 @@ public:
     return top->value;
   }
 };
+
+/*
+  Binary Search
+  - At each step we reduce the search range.
+  - We count the number of elements smaller than mid and adjust low/high accordingly.
+ */
+
+class Solution {
+public:
+  int kthSmallest( vector<vector<int>>& matrix, int k ) {
+    size_t n = matrix.size();
+    int low = matrix[0][0], high = matrix[n-1][n-1], mid;
+    while( low < high ) {
+      mid = low + (high - low)/2;
+      // get number of element in each row smaller than mid
+      int count = 0, j = n-1;
+      for( int i=0; i<n; ++i ) {
+	while( j >= 0 && matrix[i][j] > mid ) j--;
+	count += j+1;
+      }
+      if( k > count ) low = mid+1;
+      else high = mid;
+    }
+    return low;
+  }
+};
