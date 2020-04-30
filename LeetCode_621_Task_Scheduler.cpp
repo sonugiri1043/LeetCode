@@ -11,55 +11,52 @@ Output: 8
 Explanation: A -> B -> idle -> A -> B -> idle -> A -> B.
 */
 
-/*
 The idea used here is similar to - https://leetcode.com/problems/rearrange-string-k-distance-apart
-
-We need to arrange the characters in string such that each same character is K (k=1 here)
-distance apart, where distance in this problems is time b/w two similar task execution.
-
+We need to arrange the characters in string such that each same character is K distance apart, where distance in this problems is time b/w two similar task execution.
 Idea is to add them to a priority Q and sort based on the highest frequency.
-And pick the task in each round of 'n' (n=2 here) with highest frequency. As you pick the task,
-decrease the frequency, and put them back after the round.
-*/
-
-class Solution {
+  And pick the task in each round of 'n' with highest frequency. As you pick the task, decrease the frequency, and put them back after the round.
+  class Solution {
   public:
-    string reorganizeString( string S ) {
-      // Build char -> frequencymap
-      unordered_map<char, int> charFreq;
-      for( auto c : S )
-	++charFreq[c];
+    int leastInterval( vector<char>& tasks, int n ) {
+      // create task to frequency hash table 'taskFreq'
+      unordered_map<char, int> taskFreq;
+      for( auto task : tasks ) 
+	++taskFreq[task];
         
-      // Build a max heap based on frequency
-      priority_queue< pair<int,char> > maxHeap;
-      for( auto p : charFreq )
+      // create a maxHeap from taskFreq
+      priority_queue<pair<int, char>> maxHeap;
+      for( auto p : taskFreq )
 	maxHeap.push( { p.second, p.first } );
         
-      string result="";
+      // Try to fill window 0 - n with different tasks, otherwise empty slots.
+      // similar to placing same task task n distance apart ( i, i+n+1 )
+      string taskOrder = "";
       while( !maxHeap.empty() ) {
-	if( maxHeap.size() == 1 && maxHeap.top().first > 1 ) {
-	  // only one element left with with frequency > 1
-	  result = "";
-	  break;
+	queue< pair<int, char> > tmpQueue;
+	int i = n+1;
+	while( i-- > 0 ) {
+	  if( maxHeap.empty() ) {
+	    /* no more task to be executed in this window
+	       add idle window since we have pending task for next window */
+	    if( !tmpQueue.empty() )
+	      taskOrder += "0"; 
+	  } else {
+	    // most frequency task
+	    auto p = maxHeap.top(); maxHeap.pop();
+	    taskOrder += p.second;
+	    // decrease frequency, meaning it got executed
+	    --p.first;
+	    // collect eligible task to add back to maxHeap
+	    if( p.first > 0 ) tmpQueue.push( p );
+	  }
 	}
-        
-	/* pop the most frequent element (lets say 'x' ) and one more element ('y')
-               to be placed adjacent to 'x'. 
-               push 'x' and 'y' again to max stack if their remaining frequency > 0
-	*/
-	queue< pair<int,char> > tmpQueue;
-	int n = 2; // window size 2
-	while( !maxHeap.empty() && n-- > 0 ) {
-	  auto p = maxHeap.top(); maxHeap.pop();
-	  result += p.second;
-	  --p.first;
-	  if( p.first > 0 ) tmpQueue.push( p );
-	} 
-	while( !tmpQueue.empty() ) {
+
+	// add pending tasks to maxHeap
+	while( !tmpQueue.empty() ){
 	  maxHeap.push( tmpQueue.front() );
 	  tmpQueue.pop();
 	}
       }
-      return result;
+      return taskOrder.length();
     }
-  }
+  };
