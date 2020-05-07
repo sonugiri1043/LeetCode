@@ -1,1 +1,1 @@
-Some medium to hard difficulty level interview questions.
+This repo has LeetCode questions along with solution in C++.
