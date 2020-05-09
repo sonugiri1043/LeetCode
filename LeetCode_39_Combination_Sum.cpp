@@ -41,3 +41,24 @@ public:
   }
 };
 
+// Unbounded Knapsack
+vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
+  sort( candidates.begin(), candidates.end() );
+
+  //  Unbounded knapsack : Similar to coin change
+  vector< vector< vector<int> > > dp(target + 1, vector<vector<int>>());
+  dp[0].push_back(vector<int>());
+
+  for( int i=1; i <= candidates.size(); i++ ) {
+    for( int j=1; j<=target; j++ ) {
+      if( candidates[i-1] <= j ) {
+	auto combs = dp[ j - candidates[i-1] ];
+	for( auto comb : combs ) {
+	  comb.push_back( candidates[i-1] );
+	  dp[j].push_back( comb );
+	}
+      }
+    }
+  }
+  return dp[target];
+}
